@@ -17,6 +17,7 @@ export default function App(){
 
   function onRetry(){
     setRetry(true)
+    setWinner('')
     if (winner === 'X'){
       setScore({...score, X: score[winner] + 1 })
     } else{
@@ -28,7 +29,7 @@ export default function App(){
   return (
     <>
    <Board onWin = {onWin}></Board>
-   {winner? <Retry winner = {winner}></Retry> : ''}
+   {winner? <Retry winner = {winner} onRetry={onRetry}></Retry> : ''}
     </>
   )
 }
@@ -116,12 +117,12 @@ export function WinnerBanner({winner}){
   )
 }
 
-export function Retry({winner}){
+export function Retry({winner,onRetry}){
 
   return(
     <div className="retry">
       <WinnerBanner winner= {winner}></WinnerBanner>
-      <button className="but-retry"><FontAwesomeIcon icon={faRedo}/></button>
+      <button className="but-retry" onClick={onRetry}><FontAwesomeIcon icon={faRedo}/></button>
     </div>
   )
 }
