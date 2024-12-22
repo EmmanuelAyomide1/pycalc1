@@ -1,0 +1,46 @@
+button {
+    height: var(--length);
+    width: var(--length);
+    background-color: white;
+    border-color: black;
+    font-size: 40px;
+    font-weight: 100;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    color: blue;
+}
+
+.b1 {
+    border-top: none;
+    border-left: none;
+}
+
+.b2 {
+    border-top: none;
+}
+
+.b3 {
+    border-top: none;
+    border-right: none;
+}
+
+.b4 {
+    border-left: none;
+}
+
+.b6 {
+    border-right: none;
+}
+
+.b7 {
+    border-bottom: none;
+    border-left: none;
+}
+
+.b8 {
+    border-bottom: none;
+}
+
+.b9 {
+    border-right: none;
+    border-bottom: none;
+}
