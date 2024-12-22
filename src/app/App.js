@@ -13,7 +13,7 @@ class App extends Component {
     this.buttons = this.buttons.bind(this);
     this.handlePlayed = this.handlePlayed.bind(this);
     this.onMovePlayed = this.onMovePlayed.bind(this);
-    this.state = { status: 'X', num: 0, moves: [] };
+    this.state = { status: 'X', num: 0, moves: [0, 1, 2, 3, 4, 5, 6, 7, 8] };
 
   }
   componentDidMount() {
@@ -26,7 +26,10 @@ class App extends Component {
 
   onMovePlayed = (play) => {
     console.log("BUTTON", play);
-    this.setState({ moves: this.moves[play.position] = play.value },)
+    console.log("mvoe", this.state.moves)
+    this.setState({ moves: this.state.moves[parseInt(play.position)] = play.value }, () => {
+      console.log(this.state.moves);
+    })
 
     // const lines = [
     //   [0, 1, 2],
