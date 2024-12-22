@@ -2,6 +2,7 @@ let instance = null;
 let observers = {};
 
 export const movePlayed = "movePlayed"
+export const winMove = "winMove"
 
 export default class NotificationService {
     constructor() {

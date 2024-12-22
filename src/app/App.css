@@ -28,6 +28,10 @@
   color: #61dafb;
 }
 
+.winner {
+  margin-top: 50px;
+}
+
 .board {
   display: grid;
   width: fit-content;
@@ -39,6 +43,8 @@
 
 :root {
   --length: 100px;
+  --primary-color: blue;
+  --secondary-color: rgb(237, 65, 65);
 }
 
 @keyframes App-logo-spin {

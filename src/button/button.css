@@ -6,7 +6,14 @@ button {
     font-size: 40px;
     font-weight: 100;
     font-family: Verdana, Geneva, Tahoma, sans-serif;
-    color: blue;
+}
+
+.X {
+    color: var(--primary-color)
+}
+
+.O {
+    color: var(--secondary-color);
 }
 
 .b1 {
