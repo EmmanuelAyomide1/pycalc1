@@ -17,12 +17,12 @@ export default function App(){
 
   function onRetry(){
     setRetry(true)
-    score[winner] + 1
     if (winner === 'X'){
-      setScore({...score, X: score[X] + 1 })
+      setScore({...score, X: score[winner] + 1 })
     } else{
-    setScore({...score, O: score[O] + 1 })
+    setScore({...score, O: score[winner] + 1 })
   }
+}
 
 
   return (
@@ -32,7 +32,7 @@ export default function App(){
     </>
   )
 }
-}
+
 
 export function Board({onWin}){
   const [status,setStatus] = useState('X')
