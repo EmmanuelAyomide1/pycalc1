@@ -1,0 +1,18 @@
+.retry{
+    position: absolute;
+    top: 100px;
+    left: 50%;
+    z-index: 2;
+    background-color: rgba(0, 0, 0, 0.244);
+    width:400px;
+    height: 400px;
+    transform: translateX(-50%);
+    text-align: center;
+}
+
+.but-retry{
+    position: relative;
+    top: 340px;
+    width: 40px;
+    height: 30px;
+}

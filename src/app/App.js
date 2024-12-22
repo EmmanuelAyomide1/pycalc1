@@ -1,33 +1,52 @@
-import { Component } from 'react';
-import Button from '../button/button';
-import './App.css';
-import NotificationService, { movePlayed, winMove } from '../services/notification-service';
-import Winner from '../winner/winner';
+import {useState} from 'react'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faRedo } from '@fortawesome/free-solid-svg-icons';
+import '../board/board.css'
+import '../button/button.css'
+import '../retry/retry.css'
 
-
-const ns = new NotificationService();
-
-class App extends Component {
-
-  constructor(props) {
-    super(props);
-    this.buttons = this.buttons.bind(this);
-    this.handlePlayed = this.handlePlayed.bind(this);
-    this.onMovePlayed = this.onMovePlayed.bind(this);
-    this.checkResult = this.checkResult.bind(this);
-    this.winner = this.winner.bind(this);
-    this.state = { status: 'X', num: 0, moves: [0, 1, 2, 3, 4, 5, 6, 7, 8] , winner: ''};
-
-  }
-  componentDidMount() {
-    ns.addObserver(movePlayed, this, this.onMovePlayed);
+export default function App(){
+  const [winner,setWinner] = useState('')
+  const [retry, setRetry] = useState(false)
+  const [score , setScore] = useState({X: 0 , O : 0})
+  
+  function onWin(winner){
+    console.log("winner",winner)
+    setWinner(winner);
   }
 
-  componentWillUnmount() {
-    ns.removeObserver(movePlayed, this);
+  function onRetry(){
+    setRetry(true)
+    score[winner] + 1
+    if (winner === 'X'){
+      setScore({...score, X: score[X] + 1 })
+    } else{
+    setScore({...score, O: score[O] + 1 })
   }
 
-  checkResult = () => {
+
+  return (
+    <>
+   <Board onWin = {onWin}></Board>
+   {winner? <Retry winner = {winner}></Retry> : ''}
+    </>
+  )
+}
+}
+
+export function Board({onWin}){
+  const [status,setStatus] = useState('X')
+  const [moves,setMoves] = useState({selected:[1,2,3,4,5,6,7,8], available:9})
+
+  function onButtonClick(id){
+    const newMove = [...moves.selected.slice(0,id), status, ...moves.selected.slice(id+1)]
+    const value = (status === 'X'? 'O' : 'X')
+    setStatus(value)
+    setMoves({selected:newMove, available: moves.available-1})
+    getWinner(newMove,moves.available-1)
+  }
+
+  function getWinner(moves, available){
     const lines = [
       [0, 1, 2],
       [3, 4, 5],
@@ -40,75 +59,69 @@ class App extends Component {
   ];
   for (let i = 0; i < lines.length; i++) {
     const [a, b, c] = lines[i];
-    var moves = this.state.moves;
-    console.log(moves[a])
+
     if (moves[a] && moves[a] === moves[b] && moves[a] === moves[c]) {
       console.log("win",moves[a])
-      this.setState({winner: moves[a]});
-      ns.postNotification(winMove,this.state.winner)
+      onWin(moves[a]);
     }
+  }
+ console.log("a",available)
+  if (!available){
+     onWin('Draw')
   }
   return null;
   }
 
-  onMovePlayed = (play) => {
-    var curMove = [...this.state.moves]
-    curMove[parseInt(play.position-1)] = play.value;
-    this.setState({ moves: curMove }, () => {
-      console.log(this.state.moves);
-      this.checkResult();
-  })
-  }
 
-  buttons() {
-    let allButtons = [];
-    for (var i = 1; i < 10; i++) {
-      let name = `b${i}`;
-      allButtons.push(<Button type={name} key={i}
-        num={this.state.num} status={this.state.status} handlePlay={this.handlePlayed}>
-      </Button >
-      );
+  
+  function getAllButtons() {
+    let buttons = []
+    for (let i=0 ; i<9 ; i++) {
+      buttons.push(<Button key={i} id={i} onClick={onButtonClick} currentPlayer={status}></Button>);
     }
-    return (allButtons);
+    return (buttons);
   }
 
-  winner(){
-    let  element ;
-    if(this.state.winner){
-      element = <Winner winner={this.state.winner}></Winner>;
-    }
-    console.log("runs");
-    return (element);
-  }
-
-  handlePlayed() {
-    var self = this;
-    self.setState({ num: this.state.num + 1 }, () => {
-      if (this.state.num % 2 === 0) {
-        self.setState({ status: 'X' }, () => {
-        });
-      }
-      else {
-        self.setState({ status: 'O' }, () => {
-        }
-        );
-      }
-    }
-    );
-  }
-
-  render() {
-
-    return (
-      <div className="App">
-        <div className="winner">
-        {this.winner()}
-        </div>
-        <div className='board'>
-          {this.buttons()}
-        </div>
-      </div>
-    );
-  }
+  return (
+    <div className="board" >
+      {getAllButtons()}
+    </div>
+  )
 }
-export default App;
+
+export function Button({id, onClick, currentPlayer}){
+  const [status,setStatus]  = useState({clicked: false , value: ''})
+
+  function onButtonClick() {
+    console.log("cur",currentPlayer);
+    if(!status.clicked){
+      const value = (currentPlayer === 'X') ? 'X' : 'O' 
+      setStatus({clicked: true , value})
+      onClick(id)
+    }
+  }
+  return(
+    <>
+    <button className={`button but${id} but${status.value}`} onClick={onButtonClick} disabled={status.clicked}>{status.value}</button>
+    </>
+  )
+}
+
+export function WinnerBanner({winner}){
+
+  return (
+    <div className= "win-banner">
+      {winner === 'Draw'? 'Draw': `Player ${winner} won`}
+    </div>
+  )
+}
+
+export function Retry({winner}){
+
+  return(
+    <div className="retry">
+      <WinnerBanner winner= {winner}></WinnerBanner>
+      <button className="but-retry"><FontAwesomeIcon icon={faRedo}/></button>
+    </div>
+  )
+}

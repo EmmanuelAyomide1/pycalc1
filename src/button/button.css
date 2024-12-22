@@ -1,53 +1,59 @@
-button {
+.button {
     height: var(--length);
     width: var(--length);
+    outline: none;
     background-color: white;
+    font-size: x-large;
+}
+
+.button:disabled{
     border-color: black;
-    font-size: 40px;
-    font-weight: 100;
-    font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
-.X {
-    color: var(--primary-color)
+.butX{
+    color: lightcoral;
 }
 
-.O {
-    color: var(--secondary-color);
+.butO{
+    color: rgb(24, 178, 229);
 }
 
-.b1 {
+:root {
+    --length: 70px
+}
+
+.but0{
     border-top: none;
     border-left: none;
 }
-
-.b2 {
+.but1{
     border-top: none;
 }
 
-.b3 {
+.but2 {
     border-top: none;
     border-right: none;
 }
 
-.b4 {
+.but3 {
     border-left: none;
 }
 
-.b6 {
+
+.but5 {
     border-right: none;
 }
 
-.b7 {
+.but6 {
     border-bottom: none;
     border-left: none;
 }
 
-.b8 {
+.but7{
     border-bottom: none;
 }
 
-.b9 {
-    border-right: none;
+.but8{
     border-bottom: none;
+    border-right: none;
 }
