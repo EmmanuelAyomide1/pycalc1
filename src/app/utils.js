@@ -1,33 +1,30 @@
-let moves;
-let available;
-
+let Initialm ;
 export function AiMove(Gmoves, Gavailable) {
-    moves = Gmoves;
-    const availableMoves = avail();
-    let high = -Infinity
-    let bestMove = 1
-    let possibleMoves = []
+    Initialm = [...Gmoves]; // Make a copy of Gmoves to prevent direct mutation
+    const availableMoves = avail(Initialm);
+    let high = -100;
+    let bestMove = 1;
+    let possibleMoves = [];
 
     availableMoves.forEach(i => {
         let r;
-        inp(moves, i - 1, false)
-        if (getWinner()) {
-            r = reward(false, 0)
+        const moves = inp([...Initialm], i - 1, false); 
+        if (getWinner(moves)) {
+            r = reward(moves,0);
         } else {
-            r = minimax(avail(), true, 1)
+            r = minimax(moves,avail(moves), true, 1);
         }
-        console.log("rr", r)
-        possibleMoves.push(r)
+        possibleMoves.push(r);
         if (r > high) {
-            high = r
-            bestMove = i
+            high = r;
+            bestMove = i;
         }
-        moves[i - 1] = i
+        moves[i - 1] = i; 
     });
-    return bestMove
 
+    return bestMove;
 
-    function getWinner() {
+    function getWinner(moves) {
         const lines = [
             [0, 1, 2],
             [3, 4, 5],
@@ -44,15 +41,14 @@ export function AiMove(Gmoves, Gavailable) {
                 return moves[a];
             }
         }
-        if (!avail().length) {
+        if (!avail(moves).length) {
             return 'Draw';
         }
         return null;
     }
 
-    function reward(depth) {
-        console.log('reward', getWinner())
-        switch (getWinner()) {
+    function reward(moves,depth) {
+        switch (getWinner(moves)) {
             case 'O':
                 return 15 - depth;
             case 'X':
@@ -64,45 +60,36 @@ export function AiMove(Gmoves, Gavailable) {
         }
     }
 
-    function minimax(availableMoves, state, depth) {
+    function minimax(moves,availableMoves, state, depth) {
         let result = [];
-        console.log("available moves: " + availableMoves)
-        console.log(result);
         availableMoves.forEach(i => {
-            inp(moves, i - 1, state)
-            if (getWinner()) {
-                if (state) {
-                    let r = reward(state, depth);
-                    result.push(r);
-                } else {
-                    let r = reward(state, depth);
-                    result.push(r);
-                }
+            const newMoves = inp([...moves], i - 1, state); // Pass a copy of moves to avoid mutation
+            if (getWinner(newMoves)) {
+                let r = reward(newMoves,depth);
+                result.push(r);
             } else {
-                result.push(minimax(availableMoves.filter(m => m !== i), !state, depth + 1));
+                result.push(minimax(newMoves,avail(newMoves), !state, depth + 1));
             }
-            moves[i - 1] = i
+            moves[i - 1] = i; // Revert the move here (this is still needed for the loop)
         });
-        console.log("moves", moves);
         if (state) {
-            return Math.min(result)
+            return Math.min(...result); // Spread the result to avoid an array of arrays
         } else {
-            return Math.max(result)
+            return Math.max(...result); // Spread the result to avoid an array of arrays
         }
     }
 
     function inp(moves, i, isX) {
         if (isX) {
             moves[i] = 'X';
-        }
-        else {
+        } else {
             moves[i] = 'O';
         }
+
+        return moves;
     }
 
-    function avail() {
-        return moves.filter((move) =>
-            (move !== 'X' && move !== 'O')
-        )
+    function avail(moves) {
+        return moves.filter((move) => move !== 'X' && move !== 'O');
     }
 }

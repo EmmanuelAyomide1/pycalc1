@@ -43,18 +43,16 @@ export default function App() {
 
 export function Board({ onWin, retry, afterRetry }) {
   const [status, setStatus] = useState('X')
-  const [moves, setMoves] = useState({ selected: [1, 2, 3, 4, 5, 6, 7, 8], available: 9 })
+  const [moves, setMoves] = useState({ selected: [1, 2, 3, 4, 5, 6, 7, 8,9], available: 9 })
   const buttonss = [...Array(9)]
   const buttonRefs = useRef(buttonss);
 
   useEffect(() => {
     if (retry) {
-      setMoves({ selected: [1, 2, 3, 4, 5, 6, 7, 8], available: 9 });
+      setMoves({ selected: [1, 2, 3, 4, 5, 6, 7, 8,9], available: 9 });
       afterRetry();
     }
   }, [retry, afterRetry])
-
-  console.log("refss", buttonRefs)
 
   function onButtonClick(id) {
     const newMove = [...moves.selected.slice(0, id), status, ...moves.selected.slice(id + 1)]
@@ -62,8 +60,14 @@ export function Board({ onWin, retry, afterRetry }) {
     setStatus(value)
     setMoves({ selected: newMove, available: moves.available - 1 })
     getWinner(newMove, moves.available - 1)
-    console.log(AiMove(newMove, moves.available - 1));
   }
+
+  useEffect(() => {
+    if(status === 'O'){
+      buttonRefs.current[AiMove(moves.selected, moves.available)-1].click();
+    }
+  }, [status, buttonRefs, moves])
+
 
   function getWinner(moves, available) {
     const lines = [
